@@ -7,11 +7,14 @@ import { AuthDto } from 'src/dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as argon from 'argon2';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 @Injectable() //it means it's going to be able to use dependency injection
 export class AuthService {
-  constructor(private prisma: PrismaService) {
+  constructor(private prisma: PrismaService,private jwt:JwtService, private config:ConfigService) {
     //because we have injected prismamodule at authmodule
   }
+  //=============Signup=============//
   async signup(dto: AuthDto) {
     try {
       //generate hashed password
@@ -26,7 +29,7 @@ export class AuthService {
       });
       delete user.hash;
 
-      return user;
+      return this.signToken(user.id,user.email);
     } catch (error) {
       if (
         error instanceof
@@ -40,7 +43,9 @@ export class AuthService {
       }
       throw error;
     }
-  }
+  };
+
+  //=========Sign in==========//
   async signin(dto: AuthDto) {
     try {
       const { email, password } = dto;
@@ -56,10 +61,26 @@ export class AuthService {
        const matchpwd = await argon.verify(user.hash, password)
       //if password does not match throw exception
       if(!matchpwd) throw new ForbiddenException("Credentials incorrect")
-      delete user.hash
-      return { user, msg: 'Login Successful' };
+      return this.signToken(user.id,user.email);
     } catch (error) {
       throw error;
     }
-  }
+  };
+//=============create Token =================//
+async signToken(
+    userId:number,
+    email:string,
+): Promise<{access_token:string}>{
+    const payload ={
+        sub:userId,
+        email
+    }
+    const secret=this.config.get("JWT_SECRET")
+    const token = await this.jwt.signAsync(payload,{expiresIn:"15min",secret})
+
+    return {access_token:token}
+}
+
+
+
 }
