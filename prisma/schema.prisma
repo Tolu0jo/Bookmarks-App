@@ -15,13 +15,16 @@ id Int  @id @default(autoincrement())
 createdAt DateTime @default(now())
 updatedAt DateTime @updatedAt
 
-email String
+email String @unique
 hash String
 firstName String? //the first name is optional
 lastName String?
+
+@@map("users")
+bookmarks Bookmark[]
 }
 
-model BookApi{
+model Bookmark{
 id Int  @id @default(autoincrement()) 
 createdAt DateTime @default(now())
 updatedAt DateTime @updatedAt
@@ -29,4 +32,9 @@ updatedAt DateTime @updatedAt
 title String
 description String?
 link String
+
+userId Int
+user User @relation(fields:[userId], references:[id]) //ONE USER TO MANY BOOKMARKS ASSOCIATIONS
+
+@@map("bookmarks")
 }
