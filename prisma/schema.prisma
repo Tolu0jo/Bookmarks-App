@@ -9,3 +9,24 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User{
+id Int  @id @default(autoincrement())
+createdAt DateTime @default(now())
+updatedAt DateTime @updatedAt
+
+email String
+hash String
+firstName String? //the first name is optional
+lastName String?
+}
+
+model BookApi{
+id Int  @id @default(autoincrement()) 
+createdAt DateTime @default(now())
+updatedAt DateTime @updatedAt
+
+title String
+description String?
+link String
+}
