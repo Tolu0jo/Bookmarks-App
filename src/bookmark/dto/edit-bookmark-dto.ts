@@ -3,7 +3,7 @@ import { IsNotEmpty, IsOptional, IsString } from "class-validator";
 export class EditBookmarkDto{
     @IsString()
     @IsOptional()
-    title: string;
+    title?: string;
  
     @IsString()
     @IsOptional()
@@ -11,5 +11,5 @@ export class EditBookmarkDto{
 
     @IsString() 
     @IsOptional()
-    link: string;
+    link?: string;
 }

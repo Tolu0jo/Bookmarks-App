@@ -3,14 +3,15 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { User } from '@prisma/client';
-import { AuthDto } from '../auth/dto';
+import { AuthDto, SigninDto } from '../auth/dto';
 import * as argon from 'argon2';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
+
+
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-//import { PrismaService } from '../prisma/prisma.service';
 import { PrismaService } from '../prisma/prisma.service';
-
+import { v4 as uuidv4 } from 'uuid';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 @Injectable() //it means it's going to be able to use dependency injection
 export class AuthService {
   constructor(private prisma: PrismaService,private jwt:JwtService, private config:ConfigService) {
@@ -21,12 +22,15 @@ export class AuthService {
     try {
       //generate hashed password
       const hash = await argon.hash(dto.password);
-
+       const id = uuidv4()
       //save new user in db
       const user = await this.prisma.user.create({
         data: {
+          id,
           email: dto.email,
           hash,
+          firstName: dto.firstName,
+          lastName: dto.lastName
         },
       });
       delete user.hash;
@@ -48,7 +52,7 @@ export class AuthService {
   };
 
   //=========Sign in==========//
-  async signin(dto: AuthDto) {
+  async signin(dto: SigninDto) {
     try {
       const { email, password } = dto;
       // find user by email
@@ -70,7 +74,7 @@ export class AuthService {
   };
 //=============create Token =================//
 async signToken(
-    userId:number,
+    userId:string,
     email:string,
 ): Promise<{access_token:string}>{
     const payload ={
@@ -78,7 +82,7 @@ async signToken(
         email
     }
     const secret=this.config.get("JWT_SECRET")
-    const token = await this.jwt.signAsync(payload,{expiresIn:"15min",secret})
+    const token = await this.jwt.signAsync(payload,{expiresIn:"3d",secret})
 
     return {access_token:token}
 }

@@ -28,7 +28,7 @@ export class BookmarkController {
   //==================Crate Bookmark =================//
   @Post()
   createBookmark(
-    @GetUser('id') userId: number,
+    @GetUser('id') userId: string,
     @Body() dto: CreateBookmarkDto,
   ) {
     return this.bookmarkService.createBookmark(
@@ -39,42 +39,42 @@ export class BookmarkController {
 
   //===============Get Bookmarks by user =============//
   @Get()
-  getBookmarks(@GetUser('id') userId: number) {
+  getBookmarks(@GetUser('id') userId: string) {
     return this.bookmarkService.getBookmarks(userId);
   }
 
   //============GetBookmarksbyid=============//
   @Get(':id')
   getBookmarksById(
-    @GetUser('id') userId: number, //decorator to get the looged in user
-    @Param('id', ParseIntPipe) bookmarkId: number,
+    @GetUser('id') userId: string, //decorator to get the looged in user
+    @Param('id') bookmarkId: string,
   ) {
     return this.bookmarkService.getBookmarksById(
       userId,
       bookmarkId,
     );
-  } //parseIntpipe id used to convert the params to number cos params are strings
+  } 
 
   //=================EditBookmark===============//
   @Patch(':id')
   editBookmarkById(
-    @GetUser('id') userId: number,
+    @GetUser('id') userId: string,
     @Body() dto: EditBookmarkDto,
-    @Param('id', ParseIntPipe) bookmarkId: number,
+    @Param('id') bookmarkId: string,
   ) {
     return this.bookmarkService.editBookmarkById(
       userId,
       dto,
       bookmarkId,
     );
-  } //parseIntpipe id used to convert the params to number cos params are strings)
+  } 
 
   //=========DeleteBookmark===========//
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   deleteBookmarkById(
-    @GetUser('id') userId: number,
-    @Param('id', ParseIntPipe) bookmarkId: number,
+    @GetUser('id') userId: string,
+    @Param('id',) bookmarkId: string,
   ) {
     return this.bookmarkService.deleteBookmarkById(
       userId,

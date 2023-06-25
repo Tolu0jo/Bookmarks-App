@@ -2,19 +2,21 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateBookmarkDto } from './dto/create-bookmark-dto';
 import { EditBookmarkDto } from './dto';
-
+import { v4 as uuidv4 } from 'uuid';
 @Injectable()
 export class BookmarkService {
   constructor(private prisma: PrismaService) {}
   
 //================Create bookmark ==============//
   async createBookmark(
-    userId: number,
+    userId: string,
     dto: CreateBookmarkDto,
   ) {
+    const id = uuidv4().toString();
     const bookmark =
       await this.prisma.bookmark.create({
         data: {
+          id,
           title: dto.title,
           description: dto.description,
           link: dto.link,
@@ -25,8 +27,8 @@ export class BookmarkService {
   }
  
   //================= Get Bookmarks of a user ==============//
- async getBookmarks(userId: number) {
-    const bookmarks = await  this.prisma.bookmark.findMany({
+ async getBookmarks(userId: string) {
+     const bookmarks = await  this.prisma.bookmark.findMany({
         where: {userId}
      })
      return bookmarks
@@ -34,20 +36,22 @@ export class BookmarkService {
   
   //=================Get single Bookmark ===============//
  async getBookmarksById(
-    userId: number,
-    bookmarkId: number,
+    userId: string,
+    bookmarkId: string,
   ) {
-    const bookmarks = await  this.prisma.bookmark.findFirst({
+    const bookmark = await this.prisma.bookmark.findFirst({
         where: {userId,
         id: bookmarkId}
-     })
-     return bookmarks
+     });
+    
+     return bookmark
+   
   }
 //================== Edit Bookmark ================//
   async editBookmarkById(
-    userId: number,
+    userId: string,
     dto: EditBookmarkDto,
-    bookmarkId: number,
+    bookmarkId: string,
   ) {
     //get the bookmark by id
     const bookmark =  await this.prisma.bookmark.findUnique({
@@ -72,8 +76,8 @@ export class BookmarkService {
   }
 //=============== Delete Bookmark ================//
  async deleteBookmarkById(
-    userId: number,
-    bookmarkId: number,
+    userId: string,
+    bookmarkId: string,
   ) {
     const bookmark =  await this.prisma.bookmark.findUnique({
         where:{
@@ -91,6 +95,7 @@ export class BookmarkService {
             id: bookmarkId,
         }
     });
+    return  {message:"Bookmark deleted"};
   }
   
 }

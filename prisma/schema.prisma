@@ -11,29 +11,29 @@ datasource db {
 }
 
 model User{
-id Int  @id @default(autoincrement())
+id  String  @id 
 createdAt DateTime @default(now())
 updatedAt DateTime @updatedAt
 
 email String @unique
 hash String
-firstName String? //the first name is optional
-lastName String?
+firstName String 
+lastName String
 
 @@map("users")
 bookmarks Bookmark[]
 }
 
 model Bookmark{
-id  Int  @id @default(autoincrement()) 
+id  String  @id 
 createdAt DateTime @default(now())
 updatedAt DateTime @updatedAt
 
 title String
-description String?
+description String?  //the description is optional
 link String
 
-userId Int
+userId String
 user   User @relation(fields:[userId], references:[id]) //ONE USER TO MANY BOOKMARKS ASSOCIATIONS
 
 @@map("bookmarks")

@@ -6,7 +6,7 @@ import {
 import { AppModule } from '../src/app.module';
 import { PrismaService } from '../src/prisma/prisma.service';
 import * as pactum from 'pactum';
-import { AuthDto } from '../src/auth/dto';
+import { AuthDto,SigninDto } from '../src/auth/dto';
 import { EditUserDto } from '../src/user/dto';
 import { CreateBookmarkDto } from '../src/bookmark/dto/create-bookmark-dto';
 import { EditBookmarkDto } from '../src/bookmark/dto';
@@ -43,6 +43,8 @@ describe('App e2e', () => {
     const dto: AuthDto = {
       email: 'email@example.com',
       password: '123 ',
+      firstName: 'jack',
+      lastName: 'josh'
     };
     describe('signup', () => {
       it('should signup', () => {
@@ -75,6 +77,10 @@ describe('App e2e', () => {
       });
     });
     describe('signin', () => {
+      const dto: SigninDto = {
+        email: 'email@example.com',
+        password: '123 ',
+      };
       it('should signin', () => {
         return pactum
           .spec()
