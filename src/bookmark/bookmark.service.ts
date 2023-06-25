@@ -43,6 +43,10 @@ export class BookmarkService {
         where: {userId,
         id: bookmarkId}
      });
+
+     if(!bookmark) {
+        return {message:"bookmark not found"}
+     }
     
      return bookmark
    
@@ -94,7 +98,7 @@ export class BookmarkService {
         where:{
             id: bookmarkId,
         }
-    });
+    })
     return  {message:"Bookmark deleted"};
   }
   
