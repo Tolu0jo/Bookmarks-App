@@ -5,7 +5,7 @@ import {
   ExtractJwt,
   Strategy,
 } from 'passport-jwt';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../../prisma/prisma.service';
 
 // to verify the token if the token is valid
 @Injectable()

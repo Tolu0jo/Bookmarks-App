@@ -3,12 +3,14 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { User } from '@prisma/client';
-import { AuthDto } from 'src/dto';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { AuthDto } from '../auth/dto';
 import * as argon from 'argon2';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+//import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
+
 @Injectable() //it means it's going to be able to use dependency injection
 export class AuthService {
   constructor(private prisma: PrismaService,private jwt:JwtService, private config:ConfigService) {

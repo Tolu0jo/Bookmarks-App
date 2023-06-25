@@ -25,7 +25,7 @@ bookmarks Bookmark[]
 }
 
 model Bookmark{
-id Int  @id @default(autoincrement()) 
+id  Int  @id @default(autoincrement()) 
 createdAt DateTime @default(now())
 updatedAt DateTime @updatedAt
 
@@ -34,7 +34,7 @@ description String?
 link String
 
 userId Int
-user User @relation(fields:[userId], references:[id]) //ONE USER TO MANY BOOKMARKS ASSOCIATIONS
+user   User @relation(fields:[userId], references:[id]) //ONE USER TO MANY BOOKMARKS ASSOCIATIONS
 
 @@map("bookmarks")
 }
